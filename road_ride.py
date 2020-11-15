@@ -2,8 +2,8 @@
 import pygame
 
 #ROZMIARY
-CAR_SIZE_X = 40 #WYSOKOŚĆ PALETKI
-CAR_SIZE_Y = 40 #SZEROKOŚĆ PALETKI
+CAR_SIZE_X = 40 #WYSOKOŚĆ AUTA
+CAR_SIZE_Y = 40 #SZEROKOŚĆ AUTA
 SCREEN_SIZE = 600 #WIELKOŚĆ EKRANU
 
 #KOLORY
@@ -14,7 +14,7 @@ BLACK = (0,0,0) #KOLOR CZARNY
 FPS = 10
 
 
-car_position = [SCREEN_SIZE/2, SCREEN_SIZE-CAR_SIZE_Y] #pozycja paletki
+car_position = [SCREEN_SIZE/2, SCREEN_SIZE-CAR_SIZE_Y] #pozycja auta
 
 pygame.init()
 
@@ -52,14 +52,14 @@ while True:
             elif event.key == pygame.K_DOWN:  ###
                 pressed_down = 0
 
-    if pressed_left ==1:
-        car_position[0]-=5
-    if pressed_right == 1:
-        car_position[0]+=5
-    if pressed_up == 1:
-        car_position[1]-=5
-    if pressed_down == 1:
-        car_position[1]+=5
+    if pressed_left ==1:   # wyznacza ile pikseli przesówa się auto w jednym ruchu
+        car_position[0]-=5  ###
+    if pressed_right == 1:  ###
+        car_position[0]+=5  ###
+    if pressed_up == 1:     ###
+        car_position[1]-=5  ###
+    if pressed_down == 1:   ###
+        car_position[1]+=5  ###
 
     gameDisplay.fill(BLACK) #maluje tło na nowo
 
