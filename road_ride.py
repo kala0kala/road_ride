@@ -7,25 +7,30 @@ CAR_SIZE_Y = 40 #SZEROKOŚĆ AUTA
 SCREEN_SIZE = 600 #WIELKOŚĆ EKRANU
 
 #KOLORY
-GREEN = (0,255,0) #KOLOR ZIELONY
-PINK = (255,20,147) #KOLOR RÓŻOWY
-BLACK = (0,0,0) #KOLOR CZARNY
+GREEN = (50,205,50) #KOLOR ZIELONY
 
 FPS = 10
 
-
-car_position = [SCREEN_SIZE/2, SCREEN_SIZE-CAR_SIZE_Y] #pozycja auta
+#pozycje
+car_position = [SCREEN_SIZE/2, 350] #pozycja auta
+road_position = [130, 0] #pozycja drogi
+bush_position = [35,100] #pozycja krzaka
 
 pygame.init()
 
 gameDisplay = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE)) #generuje okno
 clock = pygame.time.Clock() #dodaje czas
+roads = pygame.image.load('r1.png') #ładuje drogę do gry
+car = pygame.image.load('cars\8.png') #ładuje auto do gry
+bush = pygame.image.load('01.png')
 
 
 pressed_left = 0 #potrzebne do poruszania się w lewo
 pressed_right = 0 #potrzebne do poruszania się w prawo
-pressed_up = 0 #potrzebne do poruszania się w górę
-pressed_down = 0 #potrzebne do poruszania się w dół
+#pressed_up = 0 #potrzebne do poruszania się w górę
+#pressed_down = 0 #potrzebne do poruszania się w dół
+
+
 while True:
 
     for event in pygame.event.get():
@@ -47,22 +52,33 @@ while True:
                 pressed_left = 0              ###
             elif event.key == pygame.K_RIGHT:  ###
                 pressed_right = 0             ###
-            elif event.key == pygame.K_UP:    ###
-                pressed_up = 0               ###
-            elif event.key == pygame.K_DOWN:  ###
-                pressed_down = 0
+            #elif event.key == pygame.K_UP:    ###
+                #pressed_up = 0               ###
+            #elif event.key == pygame.K_DOWN:  ###
+            #    pressed_down = 0
 
-    if pressed_left ==1:   # wyznacza ile pikseli przesówa się auto w jednym ruchu
-        car_position[0]-=5  ###
-    if pressed_right == 1:  ###
-        car_position[0]+=5  ###
-    if pressed_up == 1:     ###
-        car_position[1]-=5  ###
-    if pressed_down == 1:   ###
-        car_position[1]+=5  ###
+    if pressed_left ==1: #ruch auta, kiedy wciśnięty klawisz
+        car_position[0]-=5 ###
+    if pressed_right == 1: ###
+        car_position[0]+=5 ###
+    #if pressed_up == 1:
+    #    car_position[1]-=5
+    #if pressed_down == 1:
+    #    car_position[1]+=5
 
-    gameDisplay.fill(BLACK) #maluje tło na nowo
+    if car_position[0] < 130: #zatrzymuje auto na drodze i nie pozwala mu wyjechać na trawę
+        car_position[0] = 130 ###
+    elif car_position[0] > 392: ###
+        car_position[0] = 392 ###
 
-    pygame.draw.rect(gameDisplay, PINK, (car_position[0], car_position[1], CAR_SIZE_X, CAR_SIZE_Y)) #rysuje auto (Różowy kwadrat)
+
+    gameDisplay.fill(GREEN) #maluje tło na nowo
+
+    gameDisplay.blit(roads, (road_position[0],road_position[1])) # generuje i ustawia auto w pozycji x,y
+    gameDisplay.blit(bush, (bush_position[0],bush_position[1])) #generuje krzaka
+    pygame.display.update() #aktualizuje wyświetlany obraz
+
+    gameDisplay.blit(car, (car_position[0],car_position[1])) # generuje i ustawia auto w pozycji x,y
+
     pygame.display.update() #aktualizuje wyświetlany obraz
     clock.tick(FPS)
