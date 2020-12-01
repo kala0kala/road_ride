@@ -24,7 +24,7 @@ pygame.init()
 gameDisplay = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE)) #generuje okno
 clock = pygame.time.Clock() #dodaje czas
 roads = pygame.image.load('r14.png') #ładuje drogę do gry
-car = pygame.image.load('cars\8.png') #ładuje auto do gry
+car = pygame.image.load('8.png') #ładuje auto do gry
 bush = pygame.image.load('01.png')
 cars = pygame.image.load('3.png') #ładuje drogę do gry
 
