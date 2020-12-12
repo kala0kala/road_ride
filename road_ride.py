@@ -1,12 +1,14 @@
 
 import pygame
 import random
+import sys
 
 #ROZMIARY
 SCREEN_SIZE = 600 #WIELKOŚĆ EKRANU
 
 #KOLORY
 GREEN = (50,205,50) #KOLOR ZIELONY
+BLACK = (0,0,0)
 
 FPS = 10
 
@@ -17,23 +19,29 @@ bush_position = [35,100] #pozycja krzaku
 roadx = [130,-540] #pozycja drugiej drogi
 cars_position_x = random.randint(140,382) #pozycja w osi x auta jadącego na nas
 cars_position_y = -140 #pozycja w osi y auta jadącego na nas
-
+coin_position_x = random.randint(150,372) # pozycja monety w osi x
+coin_position_y = -140 #pozycja monety w osi y
 
 pygame.init()
+pygame.font.init()
 
 gameDisplay = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE)) #generuje okno
 clock = pygame.time.Clock() #dodaje czas
 roads = pygame.image.load('r14.png') #ładuje drogę do gry
-car = pygame.image.load('8.png') #ładuje auto do gry
-bush = pygame.image.load('01.png')
-cars = pygame.image.load('3.png') #ładuje drogę do gry
+car = pygame.image.load('cars\8.png') #ładuje auto do gry
+bush = pygame.image.load('01.png') #ładuje krzak dogry
+cars = pygame.image.load('3.png') #ładuje auto do gry
+coins = pygame.image.load('coin.png') #ładuje monety do gry
+font = pygame.font.SysFont("comicsansms", 60)
 
 pressed_left = 0 #potrzebne do poruszania się w lewo
 pressed_right = 0 #potrzebne do poruszania się w prawo
 #pressed_up = 0 #potrzebne do poruszania się w górę
 #pressed_down = 0 #potrzebne do poruszania się w dół
 ruch = 1
-
+money = 1
+score = ["0"]
+scorex = 0
 
 while True:
 
@@ -59,7 +67,6 @@ while True:
     if pressed_right == 1: ###
         car_position[0]+=5 ###
 
-
     if car_position[0] < 130: #zatrzymuje auto na drodze i nie pozwala mu wujechać na trawę
         car_position[0] = 130 ###
     elif car_position[0] > 392: ###
@@ -71,16 +78,22 @@ while True:
     road1 = gameDisplay.blit(roads, (roadx[0],roadx[1])) # generuje i ustawia drogę w pozycji x,y
     road2 = gameDisplay.blit(roads, (road_position[0],road_position[1])) # generuje i ustawia drogę w pozycji x,y
     bush1 = gameDisplay.blit(bush, (bush_position[0],bush_position[1])) #generuje krzaka
+    if money == 1:
+        coins1 = gameDisplay.blit(coins, (coin_position_x,coin_position_y))
     carx = gameDisplay.blit(cars, (cars_position_x,cars_position_y)) # generuje i ustawia auto w pozycji x,y
 
     pygame.display.update() #aktualizuje wyświetlany obraz
 
     car1 = gameDisplay.blit(car, (car_position[0],car_position[1])) # generuje i ustawia auto w pozycji x,y
 
+    text = font.render(score[0], True, (0,0,0))
+    gameDisplay.blit(text, (510,20))
+
     if ruch == 1:
         bush_position[1]= bush_position[1]+5 #ruch krzaka w dół cały czas o 5 pix
         road_position[1] = road_position[1]+5 #ruch drufiej drogi w dół czły czas o 5 pix
         cars_position_y = cars_position_y +10 #ruch auta jadącego na nas o 10 pix w dół
+        coin_position_y = coin_position_y + 5
 
     if bush_position[1] == 615: #ogranicza ruch krzaka do powierzchni piędzy pix 0, a pix 615 w osi y
         bush_position[1] = 0 ###
@@ -88,6 +101,10 @@ while True:
     if cars_position_y >=615:  # ogranicza ruch auta jadącego na nas do powierzchni między pix -140, a pix 615 w osi y
         cars_position_y = -140 ###
         cars_position_x = random.randint(140,382) #jeśli auto jadące na nas wyjedzie poza okno gry, generuje nowe położenie w osi x
+
+    if coin_position_y >=615:
+        coin_position_y = -140
+        coin_position_x = random.randint(150,372)
 
     if road_position[1]>= 0:    #mechanizm, żeby droga się ruszała
         roadx[1] = roadx[1] + 5   # gra generuje dwie drogi: droga1, droga2
@@ -98,6 +115,17 @@ while True:
 
     if car1.colliderect(carx): #jeśli wystąpi kolizja naszego auta z autem jadącym na nas
         exit()                 # następuje wyjście z gry
+
+    if car1.colliderect(coins1):
+        if money == 1:
+            scorex = scorex + 5
+            scorey = str(scorex)
+            score[0] = scorey
+            money = 0
+
+    if money == 0:
+        coin_position_y = -340
+        money = 1
 
     pygame.display.update() #aktualizuje wyświetlany obraz
     clock.tick(FPS)
