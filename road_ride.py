@@ -1,4 +1,5 @@
 
+
 import pygame
 import random
 import sys
@@ -62,9 +63,9 @@ while True:
 
 
     if pressed_left ==1:  #odpowiada za ruch auta w prawo i lewo
-        car_position[0]-=8  # jeśli wsiśnięta jest strzałka prawo/lewo
+        car_position[0]-=10  # jeśli wsiśnięta jest strzałka prawo/lewo
     if pressed_right == 1: ###
-        car_position[0]+=8 ###
+        car_position[0]+=10 ###
 
     if car_position[0] < 130: #zatrzymuje auto na drodze i nie pozwala mu wjechać na trawę
         car_position[0] = 130 ###
@@ -79,10 +80,10 @@ while True:
     bush1 = gameDisplay.blit(bush, (bush_position[0],bush_position[1])) #generuje krzaka
     if money == 1:                                                              #jeśli wykryta jest moneta
         coins0 = gameDisplay.blit(coins, (coin_position_x,coin_position_y[0]))     #generuje i ustawia monetę w pozycji x, y
-        coins1 = gameDisplay.blit(coins, (coin_position_x,coin_position_y[1]))
-        coins2 = gameDisplay.blit(coins, (coin_position_x,coin_position_y[2]))
+        coins1 = gameDisplay.blit(coins, (coin_position_x,coin_position_y[1]))  ###
+        coins2 = gameDisplay.blit(coins, (coin_position_x,coin_position_y[2]))  ###
     carx0 = gameDisplay.blit(cars[0], (cars_position_x[0],cars_position_y[0])) # generuje i ustawia auto w pozycji x,y
-    carx1 = gameDisplay.blit(cars[1], (cars_position_x[1],cars_position_y[1])) # generuje i ustawia auto w pozycji x,y
+    carx1 = gameDisplay.blit(cars[1], (cars_position_x[1],cars_position_y[1])) ###
 
     pygame.display.update() #aktualizuje wyświetlany obraz
 
@@ -151,6 +152,7 @@ while True:
             scorey = str(scorex)  # zachodzi magia, żeby wynik się dobrze przetworzył i wyświetlił
             score[0] = scorey     ###
             money = 0  # moneta zmienia swoją wartość na 0 i znika
+        coin_position_x = random.randint(150,372)  #generuje nową pozycję x monety
     if money == 0: #jeśli moneta zniknęła
         coin_position_y[2] = -340 #zmienia pozycję y na -340 pix
         money = 1  #zmienia swoją wartość na 1, żeby móc się póżniej pojawić
