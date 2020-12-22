@@ -10,17 +10,17 @@ SCREEN_SIZE = 600 #WIELKOŚĆ EKRANU
 GREEN = (50,205,50) #KOLOR ZIELONY
 BLACK = (0,0,0)
 
-FPS = 10
+FPS = 15
 
 #pozycje
 car_position = [SCREEN_SIZE/2, 350] #pozycja auta
 road_position = [130, 0] #pozycja drogi
 bush_position = [35,100] #pozycja krzaku
 roadx = [130,-540] #pozycja drugiej drogi
-cars_position_x = random.randint(140,382) #pozycja w osi x auta jadącego na nas
-cars_position_y = -140 #pozycja w osi y auta jadącego na nas
+cars_position_x = [random.randint(140,382),random.randint(140,382)] #pozycja w osi x auta jadącego na nas
+cars_position_y = [-140, -550] #pozycja w osi y auta jadącego na nas
 coin_position_x = random.randint(150,372) # pozycja monety w osi x
-coin_position_y = -140 #pozycja monety w osi y
+coin_position_y = [-140, -210, -280] #pozycja monety w osi y
 
 pygame.init()
 pygame.font.init()
@@ -28,16 +28,15 @@ pygame.font.init()
 gameDisplay = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE)) #generuje okno
 clock = pygame.time.Clock() #dodaje czas
 roads = pygame.image.load('r14.png') #ładuje drogę do gry
-car = pygame.image.load('cars\8.png') #ładuje auto do gry
+car = pygame.image.load('8.png') #ładuje auto do gry
 bush = pygame.image.load('01.png') #ładuje krzak dogry
-cars = pygame.image.load('3.png') #ładuje auto do gry
+cars = [pygame.image.load('3.png'),pygame.image.load('2.png')] #ładuje auto do gry
 coins = pygame.image.load('coin.png') #ładuje monety do gry
-font = pygame.font.SysFont("comicsansms", 60)
+font = pygame.font.SysFont("fixedsys", 60)
 
 pressed_left = 0 #potrzebne do poruszania się w lewo
 pressed_right = 0 #potrzebne do poruszania się w prawo
-#pressed_up = 0 #potrzebne do poruszania się w górę
-#pressed_down = 0 #potrzebne do poruszania się w dół
+
 ruch = 1
 money = 1
 score = ["0"]
@@ -63,11 +62,11 @@ while True:
 
 
     if pressed_left ==1:  #odpowiada za ruch auta w prawo i lewo
-        car_position[0]-=5  # jeśli wsiśnięta jest strzałka prawo/lewo
+        car_position[0]-=8  # jeśli wsiśnięta jest strzałka prawo/lewo
     if pressed_right == 1: ###
-        car_position[0]+=5 ###
+        car_position[0]+=8 ###
 
-    if car_position[0] < 130: #zatrzymuje auto na drodze i nie pozwala mu wujechać na trawę
+    if car_position[0] < 130: #zatrzymuje auto na drodze i nie pozwala mu wjechać na trawę
         car_position[0] = 130 ###
     elif car_position[0] > 392: ###
         car_position[0] = 392 ###
@@ -78,33 +77,40 @@ while True:
     road1 = gameDisplay.blit(roads, (roadx[0],roadx[1])) # generuje i ustawia drogę w pozycji x,y
     road2 = gameDisplay.blit(roads, (road_position[0],road_position[1])) # generuje i ustawia drogę w pozycji x,y
     bush1 = gameDisplay.blit(bush, (bush_position[0],bush_position[1])) #generuje krzaka
-    if money == 1:
-        coins1 = gameDisplay.blit(coins, (coin_position_x,coin_position_y))
-    carx = gameDisplay.blit(cars, (cars_position_x,cars_position_y)) # generuje i ustawia auto w pozycji x,y
+    if money == 1:                                                              #jeśli wykryta jest moneta
+        coins0 = gameDisplay.blit(coins, (coin_position_x,coin_position_y[0]))     #generuje i ustawia monetę w pozycji x, y
+        coins1 = gameDisplay.blit(coins, (coin_position_x,coin_position_y[1]))
+        coins2 = gameDisplay.blit(coins, (coin_position_x,coin_position_y[2]))
+    carx0 = gameDisplay.blit(cars[0], (cars_position_x[0],cars_position_y[0])) # generuje i ustawia auto w pozycji x,y
+    carx1 = gameDisplay.blit(cars[1], (cars_position_x[1],cars_position_y[1])) # generuje i ustawia auto w pozycji x,y
 
     pygame.display.update() #aktualizuje wyświetlany obraz
 
     car1 = gameDisplay.blit(car, (car_position[0],car_position[1])) # generuje i ustawia auto w pozycji x,y
 
-    text = font.render(score[0], True, (0,0,0))
-    gameDisplay.blit(text, (510,20))
+    text = font.render(score[0], True, (0,0,0))  # Generuje teksr
+    gameDisplay.blit(text, (510,20))           #Wyświetla tekst w pozycji
 
     if ruch == 1:
         bush_position[1]= bush_position[1]+5 #ruch krzaka w dół cały czas o 5 pix
         road_position[1] = road_position[1]+5 #ruch drufiej drogi w dół czły czas o 5 pix
-        cars_position_y = cars_position_y +10 #ruch auta jadącego na nas o 10 pix w dół
-        coin_position_y = coin_position_y + 5
+        for i in range(len(cars_position_y)):
+            cars_position_y[i] = cars_position_y[i] +10 #ruch auta jadącego na nas o 10 pix w dół
+        for i in range(len(coin_position_y)):
+            coin_position_y[i] = coin_position_y[i] + 5 #ruch monety w dół o 5 pix
 
     if bush_position[1] == 615: #ogranicza ruch krzaka do powierzchni piędzy pix 0, a pix 615 w osi y
         bush_position[1] = 0 ###
 
-    if cars_position_y >=615:  # ogranicza ruch auta jadącego na nas do powierzchni między pix -140, a pix 615 w osi y
-        cars_position_y = -140 ###
-        cars_position_x = random.randint(140,382) #jeśli auto jadące na nas wyjedzie poza okno gry, generuje nowe położenie w osi x
+    for i in range(len(cars_position_y)):
+        if cars_position_y[i] >=615:  # ogranicza ruch auta jadącego na nas do powierzchni między pix -140, a pix 615 w osi y
+            cars_position_y[i] = -140 ###
+            cars_position_x[i] = random.randint(140,382) #jeśli auto jadące na nas wyjedzie poza okno gry, generuje nowe położenie w osi x
 
-    if coin_position_y >=615:
-        coin_position_y = -140
-        coin_position_x = random.randint(150,372)
+    for i in range(len(coin_position_y)):
+        if coin_position_y[i] >=615:           #jeśli pozycja y monety będzie większa niż 615 pix
+            coin_position_y[i] = -140          #moneta zmienia sfoją pozycję y na -140 pix
+            coin_position_x = random.randint(150,372)  #generuje nową pozycję x monety
 
     if road_position[1]>= 0:    #mechanizm, żeby droga się ruszała
         roadx[1] = roadx[1] + 5   # gra generuje dwie drogi: droga1, droga2
@@ -113,19 +119,41 @@ while True:
     if roadx[1] == -5:            ###
         roadx[1] = -540       ###
 
-    if car1.colliderect(carx): #jeśli wystąpi kolizja naszego auta z autem jadącym na nas
+    if car1.colliderect(carx0): #jeśli wystąpi kolizja naszego auta z autem jadącym na nas
         exit()                 # następuje wyjście z gry
 
-    if car1.colliderect(coins1):
-        if money == 1:
-            scorex = scorex + 5
-            scorey = str(scorex)
-            score[0] = scorey
-            money = 0
+    if car1.colliderect(carx1): #jeśli wystąpi kolizja naszego auta z autem jadącym na nas
+        exit()                 # następuje wyjście z gry
 
-    if money == 0:
-        coin_position_y = -340
-        money = 1
+    if car1.colliderect(coins0):   # jeśli auto zderzy się z monetą
+        if money == 1:
+            scorex = scorex + 5  # dodają się punkty do wyniku
+            scorey = str(scorex)  # zachodzi magia, żeby wynik się dobrze przetworzył i wyświetlił
+            score[0] = scorey     ###
+            money = 0  # moneta zmienia swoją wartość na 0 i znika
+    if money == 0: #jeśli moneta zniknęła
+        coin_position_y[0] = -340 #zmienia pozycję y na -340 pix
+        money = 1  #zmienia swoją wartość na 1, żeby móc się póżniej pojawić
+
+    if car1.colliderect(coins1):   # jeśli auto zderzy się z monetą
+        if money == 1:
+            scorex = scorex + 5  # dodają się punkty do wyniku
+            scorey = str(scorex)  # zachodzi magia, żeby wynik się dobrze przetworzył i wyświetlił
+            score[0] = scorey     ###
+            money = 0  # moneta zmienia swoją wartość na 0 i znika
+    if money == 0: #jeśli moneta zniknęła
+        coin_position_y[1] = -340 #zmienia pozycję y na -340 pix
+        money = 1  #zmienia swoją wartość na 1, żeby móc się póżniej pojawić
+
+    if car1.colliderect(coins2):   # jeśli auto zderzy się z monetą
+        if money == 1:
+            scorex = scorex + 5  # dodają się punkty do wyniku
+            scorey = str(scorex)  # zachodzi magia, żeby wynik się dobrze przetworzył i wyświetlił
+            score[0] = scorey     ###
+            money = 0  # moneta zmienia swoją wartość na 0 i znika
+    if money == 0: #jeśli moneta zniknęła
+        coin_position_y[2] = -340 #zmienia pozycję y na -340 pix
+        money = 1  #zmienia swoją wartość na 1, żeby móc się póżniej pojawić
 
     pygame.display.update() #aktualizuje wyświetlany obraz
-    clock.tick(FPS)
+    clock.tick(FPS)  #szybkość gry
