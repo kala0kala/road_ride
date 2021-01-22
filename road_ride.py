@@ -4,8 +4,8 @@ import sys
 
 SCREEN_SIZE = 600
 
-GREEN = (50,205,50)
-BLACK = (0,0,0)
+GREEN = (50, 205, 50)
+BLACK = (0, 0, 0)
 
 FPS = 15
 
